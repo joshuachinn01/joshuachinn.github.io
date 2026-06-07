@@ -143,6 +143,14 @@
     .modal-close{position:absolute;top:1.1rem;right:1.1rem;width:34px;height:34px;border-radius:50%;background:var(--surface);border:none;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;color:var(--text);z-index:10;}
     .modal-close:hover{background:var(--navy-light);}
     .modal-thumb{width:100%;border-radius:var(--radius);margin-bottom:1.4rem;object-fit:cover;max-height:340px;display:block;}
+    .modal-gallery{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.4rem;}
+    .modal-gallery.single{grid-template-columns:1fr;}
+    .modal-gallery img{width:100%;border-radius:var(--radius);object-fit:cover;display:block;cursor:zoom-in;transition:opacity .2s;}
+    .modal-gallery img:hover{opacity:.9;}
+    .modal-gallery .gallery-hero{grid-column:1/-1;}
+    .modal-section-label{font-size:.88rem;color:var(--muted);line-height:1.7;margin:1.25rem 0 .75rem;white-space:pre-line;border-top:1px solid var(--border);padding-top:1.25rem;}
+    .img-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:300;display:flex;align-items:center;justify-content:center;cursor:zoom-out;padding:1.5rem;}
+    .img-lightbox img{max-width:92vw;max-height:92vh;border-radius:8px;object-fit:contain;}
     .modal-chips{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:.85rem;}
     .modal-title{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:var(--text);margin-bottom:.9rem;line-height:1.2;}
     .modal-section{margin-bottom:1.1rem;}
@@ -509,12 +517,14 @@
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()">✕</button>
-    <img class="modal-thumb" id="modal-thumb" src="" alt="">
+    <p id="modal-pre-images" style="font-size:.88rem;color:var(--muted);line-height:1.7;margin-bottom:.85rem;white-space:pre-line;"></p>
+    <div id="modal-media"></div>
     <div class="modal-chips" id="modal-chips"></div>
     <h2 class="modal-title" id="modal-title"></h2>
     <div class="modal-section"><h4>Overview</h4><p id="modal-overview"></p></div>
     <div class="modal-section"><h4>What I Did</h4><p id="modal-work"></p></div>
     <div class="modal-section"><h4>Results</h4><p id="modal-results"></p></div>
+    <p id="modal-pre-links" style="font-size:.92rem;color:var(--muted);line-height:1.75;margin-bottom:.75rem;white-space:pre-line;"></p>
     <div class="modal-links" id="modal-links"></div>
   </div>
 </div>
@@ -564,6 +574,12 @@ const modals={
   },
   'cats-flyers':{
     thumb:CDN+'1734f4c6-1a19-4626-856c-e539820cb777_rwc_0x838x3024x2364x3024.jpg?h=294ea121c379a4478d5a0ef7d430ae52',
+    images:[
+      CDN+'7e431d86-6e89-4a96-93f3-6ee7a716d46e_rw_1920.png?h=3a8db231cf7ff14ca886e60717c54629',
+      CDN+'832afba0-56f0-49d1-adb2-60e4932b537f_rw_1200.png?h=d022b7bd84c4cc169316e7ef4f0473fe',
+      CDN+'a7f8b60d-9b73-48b0-a461-3215e5f5b362_rw_1200.png?h=6fed7d0d726a12bca3544a19195762f3',
+      CDN+'a9573553-fb7b-4567-8393-3c81feedd33e_rw_1920.png?h=98592e6c61d51b88d94e1b0a681b2cb6'
+    ],
     chips:['Social Media','Graphic Design','Canva'],
     title:'The Cats Restaurant — Social Media Flyers',
     overview:'Designed a suite of Instagram promotional flyers for The Cats Restaurant using Canva, covering events, seasonal promotions, and special menu features for @thecatslosgatos.',
@@ -573,6 +589,13 @@ const modals={
   },
   'cats-email':{
     thumb:CDN+'8ce46f06-b24b-4e47-96fc-91308026b7c8_rwc_0x361x1558x1218x1558.png?h=994b4c8be7ceb8ede68528b43686eb22',
+    images:[
+      CDN+'867a3571-37e5-42b4-a2ea-caa9f578205e_rw_1200.png?h=c6de6145a38cfc2f8d8a7916f5f7aa8b',
+      CDN+'82741188-0b03-44db-bc9e-ecc50d5ea48d_rw_1200.png?h=f3f9ef1a259e80611d9ceeebba1b9219',
+      CDN+'e85de0d8-7a30-4e8c-9cfc-7e68a74ca697_rw_1200.png?h=3d9b8f42f9fd20d4d2e9c7dfe8db0d7a',
+      CDN+'25617282-65d4-4aed-b58c-536d79b653aa_rw_1200.png?h=49097d8d8dddd72d585a2e6802a5c360',
+      CDN+'56f08c1a-b08b-41fd-8f88-f3836673a20c_rw_1200.png?h=e8d90e1ac12400c47596f0a4dc005411'
+    ],
     chips:['Email Marketing','SMS Marketing','Mailchimp'],
     title:'The Cats Restaurant — Email & SMS Marketing',
     overview:'Managed the full email and SMS marketing program for The Cats Restaurant using Mailchimp, covering newsletter design, copywriting, scheduling, and performance monitoring.',
@@ -596,6 +619,26 @@ const modals={
   },
   'sjsu-team':{
     thumb:CDN+'8ede191d-e205-49ce-8c52-c472fa609d97_car_202x158.png?h=a0a9bf14a20abc9627a1f9fb4cb5e3be',
+    imageSections:[
+      {
+        images:[
+          CDN+'0a8fcf68-e2c3-4cf5-9a63-56e52661f3b9_rw_1920.png?h=d8903981424f89c525f88d8d36103ab5',
+          CDN+'1f277686-a8f3-4996-885f-21ec92553a72_rw_1200.png?h=ca25732f9545fba8599d242f14227222'
+        ]
+      },
+      {
+        label:'<strong>SJSU Communication Studies Dept. Newsletter Design Team:</strong>\nExample of a newsletter design using Mailchimp that I worked on while on the SJSU COMM Dept. Newsletter Design Team. I created the graphics for the banners and entered and formatted the text, buttons, and layout. The COMM Events newsletter is a biweekly newsletter sent out by email to the students in the SJSU Communication Studies Department.',
+        images:[
+          CDN+'8ede191d-e205-49ce-8c52-c472fa609d97_rw_1920.png?h=0975fa02dfe62b90bdedc5b9e1e62f59',
+          CDN+'12ffff66-918f-4f3b-b79d-16466f824778_rw_1200.png?h=db7a860a87c1b369d218d4302e295179',
+          CDN+'d89a3ccd-7a62-4c7a-bee1-7bcf11f163ce_rw_1200.png?h=ab812ea3e896ec38ecde8f490e9104fc',
+          CDN+'c63e9b52-4c16-491d-86ed-95fc332d1409_rw_1200.png?h=a2dec4355dcf42e23fc74286b890c2e7',
+          CDN+'8f3e9b08-d2f7-4fd6-a4bd-5cd34d6de18d_rw_1200.png?h=91b1ec91fa2a7f6cdcef08aae7843849',
+          CDN+'36492893-2cc6-45c7-9479-4fb028db7142_rw_1200.png?h=c8bd01a312e504a14edd0676e9248733'
+        ]
+      }
+    ],
+    preLinksText:'SJSU Communication Studies Dept. Social Media Team:\nThe following link is a video that I created to help recruit new members to the social media team that I edited in Final Cut Pro X:',
     chips:['Team Lead','Social Media','Multi-Platform','Mailchimp'],
     title:'SJSU COMM Dept. — Production Creative Team Lead',
     overview:'Promoted to Production Creative Team Lead for the SJSU Communication Studies Department\'s social media program after serving on the newsletter design team. Led a 12-person team producing content across five platforms.',
@@ -632,6 +675,13 @@ const modals={
   },
   'church':{
     thumb:CDN+'f5d7c6b3-b440-4cbc-a3e0-3bd0617a489d_rwc_150x0x1745x1365x1745.jpg?h=3e95f7411db45303b64a18663ca4d1a6',
+    images:[
+      CDN+'582a2cb1-3267-4c5a-ad25-c245d047671d_rw_1200.png?h=b60d042be687d9786b075c3c96b8e152',
+      CDN+'eed202d0-2768-481e-bec2-941079fc788c_rw_1200.png?h=eb182cbaefad78ef860a80d5c745c0d2',
+      CDN+'35ab1b19-13bd-4e4e-97c7-d9949fc76e31_rw_1200.png?h=a621c33d7d7e7abb0ff6ee15c0b5d7f2',
+      CDN+'fb72617c-0252-433e-a251-9c8a0f2e7a2c_rw_1200.png?h=fce84ef836593eff326714a6f1c1159a',
+      CDN+'61624d21-7a8e-4a95-8960-eee410c7c6a2_rw_1200.png?h=c74dedc75cc09affeee796cebb99baa3'
+    ],
     chips:['Social Media','Built from Zero','Canva','Volunteer'],
     title:'Orchard Valley Christian Church — Instagram',
     overview:'Volunteered to create and launch the social media presence for Orchard Valley Christian Church, which had no Instagram account before this project.',
@@ -641,9 +691,39 @@ const modals={
   }
 };
 
+function openLightbox(src){
+  const lb=document.createElement('div');
+  lb.className='img-lightbox';
+  lb.innerHTML=`<img src="${src}" alt="">`;
+  lb.addEventListener('click',()=>lb.remove());
+  document.body.appendChild(lb);
+}
+
 function openModal(id){
   const m=modals[id]; if(!m) return;
-  document.getElementById('modal-thumb').src=m.thumb;
+  document.getElementById('modal-pre-images').textContent = '';
+  document.getElementById('modal-pre-links').textContent = m.preLinksText || '';
+  const mediaEl=document.getElementById('modal-media');
+
+  function buildGrid(imgs){
+    const hero=imgs[0];
+    const rest=imgs.slice(1);
+    return `<div class="modal-gallery${rest.length===0?' single':''}">
+      <img class="gallery-hero" src="${hero}" alt="" loading="lazy" onclick="event.stopPropagation();openLightbox('${hero}')">
+      ${rest.map(s=>`<img src="${s}" alt="" loading="lazy" onclick="event.stopPropagation();openLightbox('${s}')">`).join('')}
+    </div>`;
+  }
+
+  if(m.imageSections){
+    mediaEl.innerHTML = m.imageSections.map(sec=>{
+      const labelHtml = sec.label ? `<p class="modal-section-label">${sec.label}</p>` : '';
+      return labelHtml + (sec.images && sec.images.length ? buildGrid(sec.images) : '');
+    }).join('');
+  } else if(m.images && m.images.length){
+    mediaEl.innerHTML = buildGrid(m.images);
+  } else {
+    mediaEl.innerHTML=`<img class="modal-thumb" src="${m.thumb}" alt="">`;
+  }
   document.getElementById('modal-chips').innerHTML=m.chips.map(c=>`<span class="chip chip-navy">${c}</span>`).join('');
   document.getElementById('modal-title').textContent=m.title;
   document.getElementById('modal-overview').textContent=m.overview;
